@@ -1,0 +1,115 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: Repository\n"
+"Language: uk\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+msgid "Scientific Papers Repository"
+msgstr "Репозиторій наукових статей"
+
+msgid "Scientific Papers"
+msgstr "Наукові статті"
+
+msgid "Home"
+msgstr "Головна"
+
+msgid "Search"
+msgstr "Пошук"
+
+msgid "Upload Paper"
+msgstr "Завантажити статтю"
+
+msgid "Admin Panel"
+msgstr "Панель адміністратора"
+
+msgid "Search by title..."
+msgstr "Пошук за назвою..."
+
+msgid "Authors"
+msgstr "Автори"
+
+msgid "Years"
+msgstr "Роки"
+
+msgid "Fields"
+msgstr "Галузі"
+
+msgid "Paper Types"
+msgstr "Типи статей"
+
+msgid "View All"
+msgstr "Переглянути всі"
+
+msgid "No tags available"
+msgstr "Теги відсутні"
+
+msgid "Search Results"
+msgstr "Результати пошуку"
+
+msgid "Filter by Tags"
+msgstr "Фільтрувати за тегами"
+
+msgid "Sort by"
+msgstr "Сортувати за"
+
+msgid "Latest"
+msgstr "Останні"
+
+msgid "Most Popular"
+msgstr "Найпопулярніші"
+
+msgid "Year"
+msgstr "Рік"
+
+msgid "Uploaded"
+msgstr "Завантажено"
+
+msgid "Views"
+msgstr "Перегляди"
+
+msgid "Download"
+msgstr "Завантажити"
+
+msgid "No papers found"
+msgstr "Статей не знайдено"
+
+msgid "Title"
+msgstr "Назва"
+
+msgid "Description"
+msgstr "Опис"
+
+msgid "Creation Year"
+msgstr "Рік створення"
+
+msgid "File"
+msgstr "Файл"
+
+msgid "Tags"
+msgstr "Теги"
+
+msgid "Upload"
+msgstr "Завантажити"
+
+msgid "Invalid year format"
+msgstr "Невірний формат року"
+
+msgid "Title, year, and file are required"
+msgstr "Назва, рік та файл є обов’язковими"
+
+msgid "papers"
+msgstr "статей"
+
+msgid "Tag"
+msgstr "Тег"
+
+msgid "Tags"
+msgstr "Теги"
+
+msgid "Paper"
+msgstr "Стаття"
+
+msgid "Papers"
+msgstr "Статті"

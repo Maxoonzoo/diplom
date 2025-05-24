@@ -1,0 +1,23 @@
+{% extends 'papers/base.html' %}
+{% load i18n %}
+
+{% block title %}{% trans "Tags" %} - {% trans "Scientific Papers Repository" %}{% endblock %}
+
+{% block content %}
+<h1 class="mb-4">
+    {% if category == 'author' %}{% trans "Authors" %}
+    {% elif category == 'year' %}{% trans "Years" %}
+    {% elif category == 'field' %}{% trans "Fields" %}
+    {% elif category == 'paper_type' %}{% trans "Paper Types" %}
+    {% endif %}
+</h1>
+<ul class="list-group">
+    {% for tag in tags %}
+    <li class="list-group-item">
+        <a href="{% url 'search_results' %}?tags={{ tag.id }}">{{ tag.name }}</a> ({{ tag.num_papers }} {% trans "papers" %})
+    </li>
+    {% empty %}
+    <li class="list-group-item">{% trans "No tags available" %}</li>
+    {% endfor %}
+</ul>
+{% endblock %}

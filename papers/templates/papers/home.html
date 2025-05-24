@@ -1,0 +1,38 @@
+{% extends 'papers/base.html' %}
+{% load i18n %}
+
+{% block title %}{% trans "Home" %} - {% trans "Scientific Papers Repository" %}{% endblock %}
+
+{% block content %}
+<h1 class="mb-4">{% trans "Welcome to the Scientific Papers Repository" %}</h1>
+<form method="get" action="{% url 'search_results' %}" class="mb-4">
+    <div class="input-group">
+        <input type="text" name="q" class="form-control" placeholder="{% trans 'Search by title...' %}" value="{{ query }}">
+        <button class="btn btn-primary" type="submit">{% trans "Search" %}</button>
+    </div>
+</form>
+
+{% for category, tags in top_tags.items %}
+<div class="card mb-4">
+    <div class="card-header">
+        {% if category == 'author' %}{% trans "Authors" %}
+        {% elif category == 'year' %}{% trans "Years" %}
+        {% elif category == 'field' %}{% trans "Fields" %}
+        {% elif category == 'paper_type' %}{% trans "Paper Types" %}
+        {% endif %}
+    </div>
+    <div class="card-body">
+        <ul class="list-group list-group-flush">
+            {% for tag in tags %}
+            <li class="list-group-item">
+                <a href="{% url 'search_results' %}?tags={{ tag.id }}">{{ tag.name }}</a> ({{ tag.num_papers }} {% trans "papers" %})
+            </li>
+            {% empty %}
+            <li class="list-group-item">{% trans "No tags available" %}</li>
+            {% endfor %}
+        </ul>
+        <a href="{% url 'tag_list' category %}" class="btn btn-outline-primary mt-3">{% trans "View All" %}</a>
+    </div>
+</div>
+{% endfor %}
+{% endblock %}

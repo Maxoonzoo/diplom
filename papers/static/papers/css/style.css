@@ -1,0 +1,21 @@
+body {
+    background-color: #f8f9fa;
+    color: #333;
+}
+
+.navbar {
+    background-color: #ffffff;
+}
+
+.card {
+    border: 1px solid #e0e0e0;
+    transition: transform 0.2s;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+}
+
+.form-select[multiple] {
+    height: 150px;
+}

@@ -1,0 +1,48 @@
+{% extends 'papers/base.html' %}
+{% load i18n %}
+
+{% block title %}{% trans "Search Results" %} - {% trans "Scientific Papers Repository" %}{% endblock %}
+
+{% block content %}
+<h1 class="mb-4">{% trans "Search Results" %}</h1>
+<form method="get" action="{% url 'search_results' %}">
+    <div class="input-group mb-3">
+        <input type="text" name="q" class="form-control" placeholder="{% trans 'Search by title...' %}" value="{{ query }}">
+        <button class="btn btn-primary" type="submit">{% trans "Search" %}</button>
+    </div>
+    <div class="mb-3">
+        <label>{% trans "Filter by Tags" %}:</label>
+        <select name="tags" multiple class="form-select">
+            {% for tag in tags %}
+            <option value="{{ tag.id }}" {% if tag.id|stringformat:'s' in selected_tags %}selected{% endif %}>{{ tag.name }} ({{ tag.category }})</option>
+            {% endfor %}
+        </select>
+    </div>
+    <div class="mb-3">
+        <label>{% trans "Sort by" %}:</label>
+        <select name="sort" class="form-select" onchange="this.form.submit()">
+            <option value="latest" {% if sort == 'latest' %}selected{% endif %}>{% trans "Latest" %}</option>
+            <option value="popular" {% if sort == 'popular' %}selected{% endif %}>{% trans "Most Popular" %}</option>
+        </select>
+    </div>
+</form>
+
+<div class="row">
+    {% for paper in papers %}
+    <div class="col-md-4 mb-4">
+        <div class="card h-100">
+            <div class="card-body">
+                <h5 class="card-title">{{ paper.title }}</h5>
+                <p class="card-text">{{ paper.description|truncatewords:30 }}</p>
+                <p class="card-text"><small class="text-muted">{% trans "Year" %}: {{ paper.creation_year }}</small></p>
+                <p class="card-text"><small class="text-muted">{% trans "Uploaded" %}: {{ paper.upload_date|date:"Y-m-d" }}</small></p>
+                <p class="card-text"><small class="text-muted">{% trans "Views" %}: {{ paper.view_count }}</small></p>
+                <a href="{{ paper.file.url }}" class="btn btn-primary" target="_blank">{% trans "Download" %}</a>
+            </div>
+        </div>
+    </div>
+    {% empty %}
+    <p>{% trans "No papers found" %}</p>
+    {% endfor %}
+</div>
+{% endblock %}

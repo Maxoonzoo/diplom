@@ -1,0 +1,39 @@
+{% extends 'papers/base.html' %}
+{% load i18n %}
+
+{% block title %}{% trans "Upload Paper" %} - {% trans "Scientific Papers Repository" %}{% endblock %}
+
+{% block content %}
+<h1 class="mb-4">{% trans "Upload Paper" %}</h1>
+{% if error %}
+<div class="alert alert-danger">{{ error }}</div>
+{% endif %}
+<form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    <div class="mb-3">
+        <label for="title" class="form-label">{% trans "Title" %}</label>
+        <input type="text" name="title" id="title" class="form-control" required>
+    </div>
+    <div class="mb-3">
+        <label for="description" class="form-label">{% trans "Description" %}</label>
+        <textarea name="description" id="description" class="form-control"></textarea>
+    </div>
+    <div class="mb-3">
+        <label for="creation_year" class="form-label">{% trans "Creation Year" %}</label>
+        <input type="number" name="creation_year" id="creation_year" class="form-control" required>
+    </div>
+    <div class="mb-3">
+        <label for="file" class="form-label">{% trans "File" %}</label>
+        <input type="file" name="file" id="file" class="form-control" required>
+    </div>
+    <div class="mb-3">
+        <label for="tags" class="form-label">{% trans "Tags" %}</label>
+        <select name="tags" id="tags" multiple class="form-select">
+            {% for tag in tags %}
+            <option value="{{ tag.id }}">{{ tag.name }} ({{ tag.category }})</option>
+            {% endfor %}
+        </select>
+    </div>
+    <button type="submit" class="btn btn-primary">{% trans "Upload" %}</button>
+</form>
+{% endblock %}
