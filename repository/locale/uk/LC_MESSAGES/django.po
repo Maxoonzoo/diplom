@@ -105,11 +105,11 @@ msgstr "статей"
 msgid "Tag"
 msgstr "Тег"
 
-msgid "Tags"
-msgstr "Теги"
-
 msgid "Paper"
 msgstr "Стаття"
 
 msgid "Papers"
 msgstr "Статті"
+
+msgid "Welcome to the Scientific Papers Repository"
+msgstr "Ласкаво просимо до Репозиторію наукових статей"

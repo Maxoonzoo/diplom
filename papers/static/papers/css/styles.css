@@ -1,0 +1,37 @@
+/* Custom styles for the tag boxes on the home page */
+.tag-box {
+    background-color: #f0f0f0; /* Light gray */
+    border-radius: 8px; /* Rounded corners */
+    text-decoration: none; /* Remove underline from link */
+    color: #333; /* Dark text color */
+    transition: background-color 0.2s; /* Smooth hover effect */
+}
+
+.tag-box:hover {
+    background-color: #e0e0e0; /* Slightly darker gray on hover */
+    color: #333;
+}
+
+.counter-box {
+    background-color: #d3d3d3; /* Slightly darker gray for the counter */
+    color: #333;
+    padding: 4px 6px; /* Increased padding for better visibility */
+    border-radius: 4px;
+    font-size: 0.9em;
+    font-weight: 500; /* Slightly bolder font */
+    display: inline-block;
+    text-align: center;
+    min-width: 24px; /* Ensure visibility even for 0 */
+}
+
+/* Adjust counter box width based on number length */
+.counter-box[data-length="1"],
+.counter-box[data-length="2"] {
+    width: 24px; /* Square for 1-2 digits */
+}
+
+.counter-box[data-length="3"],
+.counter-box[data-length="4"],
+.counter-box[data-length="5"] {
+    width: 40px; /* Rectangle for 3-5 digits */
+}

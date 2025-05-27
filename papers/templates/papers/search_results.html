@@ -1,48 +1,153 @@
-{% extends 'papers/base.html' %}
-{% load i18n %}
-
-{% block title %}{% trans "Search Results" %} - {% trans "Scientific Papers Repository" %}{% endblock %}
-
-{% block content %}
-<h1 class="mb-4">{% trans "Search Results" %}</h1>
-<form method="get" action="{% url 'search_results' %}">
-    <div class="input-group mb-3">
-        <input type="text" name="q" class="form-control" placeholder="{% trans 'Search by title...' %}" value="{{ query }}">
-        <button class="btn btn-primary" type="submit">{% trans "Search" %}</button>
-    </div>
-    <div class="mb-3">
-        <label>{% trans "Filter by Tags" %}:</label>
-        <select name="tags" multiple class="form-select">
-            {% for tag in tags %}
-            <option value="{{ tag.id }}" {% if tag.id|stringformat:'s' in selected_tags %}selected{% endif %}>{{ tag.name }} ({{ tag.category }})</option>
-            {% endfor %}
-        </select>
-    </div>
-    <div class="mb-3">
-        <label>{% trans "Sort by" %}:</label>
-        <select name="sort" class="form-select" onchange="this.form.submit()">
-            <option value="latest" {% if sort == 'latest' %}selected{% endif %}>{% trans "Latest" %}</option>
-            <option value="popular" {% if sort == 'popular' %}selected{% endif %}>{% trans "Most Popular" %}</option>
-        </select>
-    </div>
-</form>
-
-<div class="row">
-    {% for paper in papers %}
-    <div class="col-md-4 mb-4">
-        <div class="card h-100">
-            <div class="card-body">
-                <h5 class="card-title">{{ paper.title }}</h5>
-                <p class="card-text">{{ paper.description|truncatewords:30 }}</p>
-                <p class="card-text"><small class="text-muted">{% trans "Year" %}: {{ paper.creation_year }}</small></p>
-                <p class="card-text"><small class="text-muted">{% trans "Uploaded" %}: {{ paper.upload_date|date:"Y-m-d" }}</small></p>
-                <p class="card-text"><small class="text-muted">{% trans "Views" %}: {{ paper.view_count }}</small></p>
-                <a href="{{ paper.file.url }}" class="btn btn-primary" target="_blank">{% trans "Download" %}</a>
+<!DOCTYPE html>
+{% load i18n static %}
+{% get_current_language as LANGUAGE_CODE %}
+{% get_language_info for LANGUAGE_CODE as lang_info %}
+<html lang="{{ LANGUAGE_CODE }}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% trans "Результати пошуку" %} - {% trans "Репозиторій наукових статей" %}</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'papers/css/styles.css' %}">
+</head>
+<body class="bg-light">
+    <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm">
+        <div class="container">
+            <a class="navbar-brand" href="{% url 'home' %}">{% trans "Наукові статті" %}</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'home' %}">{% trans "Головна" %}</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'upload_paper' %}">{% trans "Завантажити статтю" %}</a>
+                    </li>
+                    {% if user.is_superuser %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'moderate_papers' %}">{% trans "Moderate Papers" %}</a>
+                    </li>
+                    {% endif %}
+                    {% if user.is_authenticated %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'logout' %}">{% trans "Logout" %}</a>
+                    </li>
+                    {% else %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'login' %}">{% trans "Login" %}</a>
+                    </li>
+                    {% endif %}
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="languageDropdown" role="button" data-bs-toggle="dropdown">
+                            {{ lang_info.name_local }}
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li>
+                                <form action="{% url 'set_language' %}" method="post">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="language" value="uk">
+                                    <input type="hidden" name="next" value="{{ request.get_full_path }}">
+                                    <button type="submit" class="dropdown-item">Українська</button>
+                                </form>
+                            </li>
+                            <li>
+                                <form action="{% url 'set_language' %}" method="post">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="language" value="en">
+                                    <input type="hidden" name="next" value="{{ request.get_full_path }}">
+                                    <button type="submit" class="dropdown-item">English</button>
+                                </form>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
             </div>
         </div>
+    </nav>
+    <div class="container mt-4">
+        <h1 class="mb-4">{% trans "Результати пошуку" %}</h1>
+        <form method="get" action="{% url 'search_results' %}">
+            <div class="input-group mb-3">
+                <input type="text" name="q" class="form-control" placeholder="{% trans 'Пошук за назвою...' %}" value="{{ query }}">
+                <button class="btn btn-primary" type="submit">{% trans "Пошук" %}</button>
+            </div>
+            <div class="row mb-3">
+                <div class="col-md-3">
+                    <label for="tags_author" class="form-label">{% trans "Authors" %}</label>
+                    <select name="tags_author" id="tags_author" class="form-select tag-select" multiple>
+                        {% for tag in tags.author %}
+                        <option value="{{ tag.id }}" {% if tag.id|stringformat:'s' in selected_author_tags %}selected{% endif %}>{{ tag.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <label for="tags_field" class="form-label">{% trans "Fields" %}</label>
+                    <select name="tags_field" id="tags_field" class="form-select tag-select" multiple>
+                        {% for tag in tags.field %}
+                        <option value="{{ tag.id }}" {% if tag.id|stringformat:'s' in selected_field_tags %}selected{% endif %}>{{ tag.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <label for="tags_paper_type" class="form-label">{% trans "Paper Types" %}</label>
+                    <select name="tags_paper_type" id="tags_paper_type" class="form-select tag-select" multiple>
+                        {% for tag in tags.paper_type %}
+                        <option value="{{ tag.id }}" {% if tag.id|stringformat:'s' in selected_paper_type_tags %}selected{% endif %}>{{ tag.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <label for="tags_year" class="form-label">{% trans "Years" %}</label>
+                    <select name="tags_year" id="tags_year" class="form-select tag-select" multiple>
+                        {% for tag in tags.year %}
+                        <option value="{{ tag.id }}" {% if tag.id|stringformat:'s' in selected_year_tags %}selected{% endif %}>{{ tag.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+
+            <div class="row">
+                {% for paper in papers %}
+                <div class="col-md-4 mb-4">
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ paper.title }}</h5>
+                            <p class="card-text">{{ paper.description|truncatewords:30 }}</p>
+                            <p class="card-text"><small class="text-muted">{% trans "Завантажено" %}: {{ paper.upload_date|date:"Y-m-d" }}</small></p>
+                            <a href="{% url 'paper_detail' paper.id %}" class="btn btn-primary">{% trans "View Details" %}</a>
+                            <a href="{{ paper.file.url }}" class="btn btn-primary ms-2" target="_blank">{% trans "Завантажити" %}</a>
+                        </div>
+                    </div>
+                </div>
+                {% empty %}
+                <p>{% trans "Статей не знайдено" %}</p>
+                {% endfor %}
+            </div>
+
+            <div class="mb-3 mt-3">
+                <label>{% trans "Сортувати за" %}:</label>
+                <select name="sort" class="form-select d-inline-block w-auto" onchange="this.form.submit()">
+                    <option value="latest" {% if sort == 'latest' %}selected{% endif %}>{% trans "Останні" %}</option>
+                    <option value="popular" {% if sort == 'popular' %}selected{% endif %}>{% trans "Найпопулярніші" %}</option>
+                </select>
+            </div>
+        </form>
     </div>
-    {% empty %}
-    <p>{% trans "No papers found" %}</p>
-    {% endfor %}
-</div>
-{% endblock %}
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $('.tag-select').each(function() {
+                $(this).select2({
+                    placeholder: "{% trans 'Select tags' %}",
+                    allowClear: true,
+                });
+            });
+        });
+    </script>
+</body>
+</html>

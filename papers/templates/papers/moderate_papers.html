@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+{% load i18n static %}
+{% get_current_language as LANGUAGE_CODE %}
+{% get_language_info for LANGUAGE_CODE as lang_info %}
+<html lang="{{ LANGUAGE_CODE }}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% trans "Moderate Papers" %} - {% trans "Репозиторій наукових статей" %}</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'papers/css/styles.css' %}">
+</head>
+<body class="bg-light">
+    <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm">
+        <div class="container">
+            <a class="navbar-brand" href="{% url 'home' %}">{% trans "Наукові статті" %}</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'home' %}">{% trans "Головна" %}</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'upload_paper' %}">{% trans "Завантажити статтю" %}</a>
+                    </li>
+                    {% if user.is_superuser %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'moderate_papers' %}">{% trans "Moderate Papers" %}</a>
+                    </li>
+                    {% endif %}
+                    {% if user.is_authenticated %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'logout' %}">{% trans "Logout" %}</a>
+                    </li>
+                    {% else %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'login' %}">{% trans "Login" %}</a>
+                    </li>
+                    {% endif %}
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="languageDropdown" role="button" data-bs-toggle="dropdown">
+                            {{ lang_info.name_local }}
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li>
+                                <form action="{% url 'set_language' %}" method="post">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="language" value="uk">
+                                    <input type="hidden" name="next" value="{{ request.get_full_path }}">
+                                    <button type="submit" class="dropdown-item">Українська</button>
+                                </form>
+                            </li>
+                            <li>
+                                <form action="{% url 'set_language' %}" method="post">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="language" value="en">
+                                    <input type="hidden" name="next" value="{{ request.get_full_path }}">
+                                    <button type="submit" class="dropdown-item">English</button>
+                                </form>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <div class="container mt-4">
+        <h1 class="mb-4">{% trans "Moderate Papers" %}</h1>
+        {% if papers_with_pending_tags %}
+        <div class="list-group">
+            {% for item in papers_with_pending_tags %}
+            <div class="list-group-item">
+                <h5>{{ item.paper.title }}</h5>
+                <p>{{ item.paper.description|truncatewords:20 }}</p>
+                <p><small>{% trans "Uploaded" %}: {{ item.paper.upload_date|date:"Y-m-d" }}</small></p>
+                {% if item.paper.uploader_name %}
+                <p><small>{% trans "Uploader" %}: {{ item.paper.uploader_name }}</small></p>
+                {% endif %}
+                <p><small>{% trans "Pending Tags" %}: 
+                    {% for tag in item.pending_tags %}
+                    {{ tag.name }} ({{ tag.category }}){% if not forloop.last %}, {% endif %}
+                    {% empty %}
+                    None
+                    {% endfor %}
+                </small></p>
+                <a href="{% url 'paper_detail' item.paper.id %}" class="btn btn-primary btn-sm">{% trans "View Details" %}</a>
+                <a href="{% url 'approve_paper' item.paper.id %}" class="btn btn-success btn-sm ms-2">{% trans "Approve" %}</a>
+                <a href="{% url 'reject_paper' item.paper.id %}" class="btn btn-danger btn-sm ms-2">{% trans "Reject" %}</a>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <p>{% trans "No pending papers for moderation" %}</p>
+        {% endif %}
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

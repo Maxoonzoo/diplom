@@ -9,82 +9,169 @@ msgstr ""
 msgid "Scientific Papers Repository"
 msgstr "Scientific Papers Repository"
 
+msgid "Репозиторій наукових статей"
+msgstr "Scientific Papers Repository"
+
+msgid "Scientific Papers"
+msgstr "Scientific Papers"
+
+msgid "Наукові статті"
+msgstr "Scientific Papers"
+
 msgid "Home"
+msgstr "Home"
+
+msgid "Головна"
 msgstr "Home"
 
 msgid "Search"
 msgstr "Search"
 
+msgid "Пошук"
+msgstr "Search"
+
 msgid "Upload Paper"
+msgstr "Upload Paper"
+
+msgid "Завантажити статтю"
 msgstr "Upload Paper"
 
 msgid "Admin Panel"
 msgstr "Admin Panel"
 
+msgid "Панель адміністратора"
+msgstr "Admin Panel"
+
 msgid "Search by title..."
+msgstr "Search by title..."
+
+msgid "Пошук за назвою..."
 msgstr "Search by title..."
 
 msgid "Authors"
 msgstr "Authors"
 
+msgid "Автори"
+msgstr "Authors"
+
 msgid "Years"
+msgstr "Years"
+
+msgid "Роки"
 msgstr "Years"
 
 msgid "Fields"
 msgstr "Fields"
 
+msgid "Галузі"
+msgstr "Fields"
+
 msgid "Paper Types"
+msgstr "Paper Types"
+
+msgid "Типи статей"
 msgstr "Paper Types"
 
 msgid "View All"
 msgstr "View All"
 
+msgid "Переглянути всі"
+msgstr "View All"
+
 msgid "No tags available"
+msgstr "No tags available"
+
+msgid "Теги відсутні"
 msgstr "No tags available"
 
 msgid "Search Results"
 msgstr "Search Results"
 
+msgid "Результати пошуку"
+msgstr "Search Results"
+
 msgid "Filter by Tags"
+msgstr "Filter by Tags"
+
+msgid "Фільтрувати за тегами"
 msgstr "Filter by Tags"
 
 msgid "Sort by"
 msgstr "Sort by"
 
+msgid "Сортувати за"
+msgstr "Sort by"
+
 msgid "Latest"
+msgstr "Latest"
+
+msgid "Останні"
 msgstr "Latest"
 
 msgid "Most Popular"
 msgstr "Most Popular"
 
+msgid "Найпопулярніші"
+msgstr "Most Popular"
+
 msgid "Year"
+msgstr "Year"
+
+msgid "Рік"
 msgstr "Year"
 
 msgid "Uploaded"
 msgstr "Uploaded"
 
+msgid "Завантажено"
+msgstr "Uploaded"
+
 msgid "Views"
+msgstr "Views"
+
+msgid "Перегляди"
 msgstr "Views"
 
 msgid "Download"
 msgstr "Download"
 
+msgid "Завантажити"
+msgstr "Download"
+
 msgid "No papers found"
+msgstr "No papers found"
+
+msgid "Статей не знайдено"
 msgstr "No papers found"
 
 msgid "Title"
 msgstr "Title"
 
+msgid "Назва"
+msgstr "Title"
+
 msgid "Description"
+msgstr "Description"
+
+msgid "Опис"
 msgstr "Description"
 
 msgid "Creation Year"
 msgstr "Creation Year"
 
+msgid "Рік створення"
+msgstr "Creation Year"
+
 msgid "File"
 msgstr "File"
 
+msgid "Файл"
+msgstr "File"
+
 msgid "Tags"
+msgstr "Tags"
+
+msgid "Теги"
 msgstr "Tags"
 
 msgid "Upload"
@@ -93,20 +180,32 @@ msgstr "Upload"
 msgid "Invalid year format"
 msgstr "Invalid year format"
 
+msgid "Невірний формат року"
+msgstr "Invalid year format"
+
 msgid "Title, year, and file are required"
+msgstr "Title, year, and file are required"
+
+msgid "Назва, рік та файл є обов’язковими"
 msgstr "Title, year, and file are required"
 
 msgid "papers"
 msgstr "papers"
 
+msgid "статей"
+msgstr "papers"
+
 msgid "Tag"
 msgstr "Tag"
 
-msgid "Tags"
-msgstr "Tags"
-
-msgid "Paper"
-msgstr "Paper"
-
 msgid "Papers"
 msgstr "Papers"
+
+msgid "Статті"
+msgstr "Papers"
+
+msgid "Welcome to the Scientific Papers Repository"
+msgstr "Welcome to the Scientific Papers Repository"
+
+msgid "Ласкаво просимо до Репозиторію наукових статей"
+msgstr "Welcome to the Scientific Papers Repository"
