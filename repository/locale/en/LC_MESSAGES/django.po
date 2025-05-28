@@ -114,9 +114,6 @@ msgstr "Most Popular"
 msgid "Найпопулярніші"
 msgstr "Most Popular"
 
-msgid "Year"
-msgstr "Year"
-
 msgid "Рік"
 msgstr "Year"
 
@@ -168,9 +165,6 @@ msgstr "File"
 msgid "Файл"
 msgstr "File"
 
-msgid "Tags"
-msgstr "Tags"
-
 msgid "Теги"
 msgstr "Tags"
 
@@ -209,3 +203,31 @@ msgstr "Welcome to the Scientific Papers Repository"
 
 msgid "Ласкаво просимо до Репозиторію наукових статей"
 msgstr "Welcome to the Scientific Papers Repository"
+
+msgid "View Details"
+msgstr "View Details"
+
+msgid "Full Description"
+msgstr "Full Description"
+
+msgid "Tags"
+msgstr "Tags"
+
+msgid "Back to Search"
+msgstr "Back to Search"
+
+msgid "Year"
+msgstr "Year"
+
+msgid "Author"
+msgstr "Author"
+
+msgid "Field"
+msgstr "Field"
+
+msgid "Paper Type"
+msgstr "Paper Type"
+
+msgid "Navigation"
+msgstr "Navigation"
+

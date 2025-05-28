@@ -8,7 +8,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% trans "Завантажити статтю" %} - {% trans "Репозиторій наукових статей" %}</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet">
     <link rel="stylesheet" href="{% static 'papers/css/styles.css' %}">
 </head>
 <body class="bg-light">
@@ -68,78 +67,85 @@
         </div>
     </nav>
     <div class="container mt-4">
-        <h1 class="mb-4">{% trans "Завантажити статтю" %}</h1>
-        {% if error %}
-        <div class="alert alert-danger">{{ error }}</div>
-        {% endif %}
-        <form method="post" enctype="multipart/form-data">
-            {% csrf_token %}
-            <div class="mb-3">
-                <label for="title" class="form-label">{% trans "Назва" %}</label>
-                <input type="text" name="title" id="title" class="form-control" required>
+        <div class="row">
+            <div class="col-lg-9">
+                <h1 class="mb-4">{% trans "Завантажити статтю" %}</h1>
+                <form method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label for="title" class="form-label">{% trans "Title" %}</label>
+                        <input type="text" class="form-control" id="title" name="title" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="description" class="form-label">{% trans "Description" %}</label>
+                        <textarea class="form-control" id="description" name="description" rows="3"></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label for="file" class="form-label">{% trans "File" %}</label>
+                        <input type="file" class="form-control" id="file" name="file" required>
+                    </div>
+                    {% if not user.is_authenticated %}
+                    <div class="mb-3">
+                        <label for="uploader_name" class="form-label">{% trans "Your Name" %}</label>
+                        <input type="text" class="form-control" id="uploader_name" name="uploader_name" required>
+                    </div>
+                    {% endif %}
+                    <div class="row mb-3">
+                        {% for category, tag_list in tags.items %}
+                        <div class="col-md-3">
+                            <label class="form-label">
+                                {% if category == 'author' %}{% trans "Authors" %}
+                                {% elif category == 'year' %}{% trans "Years" %}
+                                {% elif category == 'field' %}{% trans "Fields" %}
+                                {% elif category == 'paper_type' %}{% trans "Paper Types" %}
+                                {% endif %}
+                            </label>
+                            <input type="text" class="form-control mb-2" name="tags_{{ category }}" placeholder="{% trans 'Add new tag...' %}">
+                            <select name="tags_{{ category }}" class="form-select" multiple>
+                                {% for tag in tag_list %}
+                                <option value="{{ tag.name }}">{{ tag.name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    {% if error %}
+                    <div class="alert alert-danger" role="alert">
+                        {{ error }}
+                    </div>
+                    {% endif %}
+                    <button type="submit" class="btn btn-primary">{% trans "Upload" %}</button>
+                </form>
             </div>
-            <div class="mb-3">
-                <label for="description" class="form-label">{% trans "Опис" %}</label>
-                <textarea name="description" id="description" class="form-control"></textarea>
+            <div class="col-lg-3">
+                <div class="sidebar">
+                    <h5>{% trans "Навігація" %}</h5>
+                    <ul class="list-group">
+                        <li class="list-group-item">
+                            <a href="{% url 'tag_list' 'author' %}">{% trans "All Authors" %}</a>
+                        </li>
+                        <li class="list-group-item">
+                            <a href="{% url 'tag_list' 'year' %}">{% trans "All Years" %}</a>
+                        </li>
+                        <li class="list-group-item">
+                            <a href="{% url 'tag_list' 'field' %}">{% trans "All Fields" %}</a>
+                        </li>
+                        <li class="list-group-item">
+                            <a href="{% url 'tag_list' 'paper_type' %}">{% trans "All Paper Types" %}</a>
+                        </li>
+                        <li class="list-group-item">
+                            <a href="{% url 'upload_paper' %}">{% trans "Завантажити статтю" %}</a>
+                        </li>
+                        {% if user.is_superuser %}
+                        <li class="list-group-item">
+                            <a href="{% url 'moderate_papers' %}">{% trans "Moderate Papers" %}</a>
+                        </li>
+                        {% endif %}
+                    </ul>
+                </div>
             </div>
-            <div class="mb-3">
-                <label for="file" class="form-label">{% trans "Файл" %}</label>
-                <input type="file" name="file" id="file" class="form-control" required>
-            </div>
-            {% if not user.is_authenticated %}
-            <div class="mb-3">
-                <label for="uploader_name" class="form-label">{% trans "Your Name" %}</label>
-                <input type="text" name="uploader_name" id="uploader_name" class="form-control" required>
-            </div>
-            {% endif %}
-            <div class="mb-3">
-                <label for="tags_author" class="form-label">{% trans "Автори" %}</label>
-                <select name="tags_author" id="tags_author" class="form-select tag-select" multiple>
-                    {% for tag in tags.author %}
-                    <option value="{{ tag.name }}">{{ tag.name }}</option>
-                    {% endfor %}
-                </select>
-            </div>
-            <div class="mb-3">
-                <label for="tags_year" class="form-label">{% trans "Роки" %}</label>
-                <select name="tags_year" id="tags_year" class="form-select tag-select" multiple>
-                    {% for tag in tags.year %}
-                    <option value="{{ tag.name }}">{{ tag.name }}</option>
-                    {% endfor %}
-                </select>
-            </div>
-            <div class="mb-3">
-                <label for="tags_field" class="form-label">{% trans "Галузі" %}</label>
-                <select name="tags_field" id="tags_field" class="form-select tag-select" multiple>
-                    {% for tag in tags.field %}
-                    <option value="{{ tag.name }}">{{ tag.name }}</option>
-                    {% endfor %}
-                </select>
-            </div>
-            <div class="mb-3">
-                <label for="tags_paper_type" class="form-label">{% trans "Типи статей" %}</label>
-                <select name="tags_paper_type" id="tags_paper_type" class="form-select tag-select" multiple>
-                    {% for tag in tags.paper_type %}
-                    <option value="{{ tag.name }}">{{ tag.name }}</option>
-                    {% endfor %}
-                </select>
-            </div>
-            <button type="submit" class="btn btn-primary">{% trans "Завантажити" %}</button>
-        </form>
+        </div>
     </div>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
-    <script>
-        $(document).ready(function() {
-            $('.tag-select').each(function() {
-                $(this).select2({
-                    tags: true,
-                    placeholder: "Select or type to add a tag",
-                    allowClear: true,
-                });
-            });
-        });
-    </script>
 </body>
 </html>

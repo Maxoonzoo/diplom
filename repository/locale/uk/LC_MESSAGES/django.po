@@ -60,9 +60,6 @@ msgstr "Останні"
 msgid "Most Popular"
 msgstr "Найпопулярніші"
 
-msgid "Year"
-msgstr "Рік"
-
 msgid "Uploaded"
 msgstr "Завантажено"
 
@@ -87,9 +84,6 @@ msgstr "Рік створення"
 msgid "File"
 msgstr "Файл"
 
-msgid "Tags"
-msgstr "Теги"
-
 msgid "Upload"
 msgstr "Завантажити"
 
@@ -113,3 +107,54 @@ msgstr "Статті"
 
 msgid "Welcome to the Scientific Papers Repository"
 msgstr "Ласкаво просимо до Репозиторію наукових статей"
+
+msgid "View Details"
+msgstr "Переглянути деталі"
+
+msgid "Full Description"
+msgstr "Повний опис"
+
+msgid "Tags"
+msgstr "Теги"
+
+msgid "Back to Search"
+msgstr "Повернутися до пошуку"
+
+msgid "Author"
+msgstr "Автор"
+
+msgid "Field"
+msgstr "Галузь"
+
+msgid "Paper Type"
+msgstr "Тип статті"
+
+msgid "Your Name"
+msgstr "Ваше ім'я"
+
+msgid "Back to Home"
+msgstr "Повернутися на головну"
+
+msgid "Username"
+msgstr "Ім'я користувача"
+
+msgid "No pending papers for moderation"
+msgstr "Немає статей що очікують модерації"
+
+msgid "Moderate Papers"
+msgstr "Модерація статей"
+
+msgid "Navigation"
+msgstr "Навігація"
+
+msgid "All Authors"
+msgstr "Автори"
+
+msgid "All Years"
+msgstr "Роки"
+
+msgid "All Fields"
+msgstr "Галузі"
+
+msgid "All Paper Types"
+msgstr "Тема"

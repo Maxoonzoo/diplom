@@ -35,3 +35,52 @@
 .counter-box[data-length="5"] {
     width: 40px; /* Rectangle for 3-5 digits */
 }
+
+/* Styles for clickable cards on the search results page */
+.clickable-card {
+    transition: background-color 0.2s, transform 0.1s;
+}
+
+.clickable-card:hover {
+    background-color: #f8f9fa; /* Light gray on hover */
+    transform: scale(1.01); /* Slight zoom effect */
+    cursor: pointer;
+}
+
+/* Styles for the right-hand sidebar */
+.sidebar {
+    background-color: #fff;
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.sidebar h5 {
+    margin-bottom: 15px;
+    font-size: 1.1rem;
+    color: #333;
+}
+
+.nav-section {
+    margin-bottom: 20px;
+}
+
+.nav-section h6 {
+    font-size: 1rem;
+    margin-bottom: 10px;
+    color: #555;
+}
+
+.nav-item-light {
+    background-color: #e6f0fa; /* Light blue background */
+    border: none;
+    padding: 8px;
+    margin-bottom: 5px;
+    border-radius: 4px;
+    color: #333;
+}
+
+.nav-item-light:hover {
+    background-color: #d0e0f0; /* Slightly darker on hover */
+    text-decoration: none;
+}
