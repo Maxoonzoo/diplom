@@ -114,9 +114,6 @@ msgstr "Most Popular"
 msgid "Найпопулярніші"
 msgstr "Most Popular"
 
-msgid "Рік"
-msgstr "Year"
-
 msgid "Uploaded"
 msgstr "Uploaded"
 
@@ -165,9 +162,6 @@ msgstr "File"
 msgid "Файл"
 msgstr "File"
 
-msgid "Теги"
-msgstr "Tags"
-
 msgid "Upload"
 msgstr "Upload"
 
@@ -192,6 +186,15 @@ msgstr "papers"
 msgid "Tag"
 msgstr "Tag"
 
+msgid "Тег"
+msgstr "Tag"
+
+msgid "Paper"
+msgstr "Paper"
+
+msgid "Стаття"
+msgstr "Paper"
+
 msgid "Papers"
 msgstr "Papers"
 
@@ -207,27 +210,107 @@ msgstr "Welcome to the Scientific Papers Repository"
 msgid "View Details"
 msgstr "View Details"
 
+msgid "Переглянути деталі"
+msgstr "View Details"
+
 msgid "Full Description"
+msgstr "Full Description"
+
+msgid "Повний опис"
 msgstr "Full Description"
 
 msgid "Tags"
 msgstr "Tags"
 
+msgid "Теги"
+msgstr "Tags"
+
 msgid "Back to Search"
 msgstr "Back to Search"
 
-msgid "Year"
-msgstr "Year"
+msgid "Повернутися до пошуку"
+msgstr "Back to Search"
 
 msgid "Author"
+msgstr "Author"
+
+msgid "Автор"
 msgstr "Author"
 
 msgid "Field"
 msgstr "Field"
 
+msgid "Галузь"
+msgstr "Field"
+
 msgid "Paper Type"
 msgstr "Paper Type"
+
+msgid "Тип статті"
+msgstr "Paper Type"
+
+msgid "Your Name"
+msgstr "Your Name"
+
+msgid "Ваше ім'я"
+msgstr "Your Name"
+
+msgid "Back to Home"
+msgstr "Back to Home"
+
+msgid "Повернутися на головну"
+msgstr "Back to Home"
+
+msgid "Username"
+msgstr "Username"
+
+msgid "Ім'я користувача"
+msgstr "Username"
+
+msgid "No pending papers for moderation"
+msgstr "No pending papers for moderation"
+
+msgid "Немає статей що очікують модерації"
+msgstr "No pending papers for moderation"
+
+msgid "Moderate Papers"
+msgstr "Moderate Papers"
+
+msgid "Модерація статей"
+msgstr "Moderate Papers"
 
 msgid "Navigation"
 msgstr "Navigation"
 
+msgid "Навігація"
+msgstr "Navigation"
+
+msgid "All Authors"
+msgstr "All Authors"
+
+msgid "Усі автори"
+msgstr "All Authors"
+
+msgid "All Years"
+msgstr "All Years"
+
+msgid "Усі роки"
+msgstr "All Years"
+
+msgid "All Fields"
+msgstr "All Fields"
+
+msgid "Усі галузі"
+msgstr "All Fields"
+
+msgid "All Paper Types"
+msgstr "All Paper Types"
+
+msgid "Усі типи статей"
+msgstr "All Paper Types"
+
+msgid "Year"
+msgstr "Year"
+
+msgid "Рік"
+msgstr "Year"

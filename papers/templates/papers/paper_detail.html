@@ -8,6 +8,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ paper.title }} - {% trans "Репозиторій наукових статей" %}</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet">
     <link rel="stylesheet" href="{% static 'papers/css/styles.css' %}">
 </head>
 <body class="bg-light">
@@ -70,79 +71,121 @@
         <div class="row">
             <div class="col-lg-9">
                 <h1 class="mb-4">{{ paper.title }}</h1>
-                <p><small>{% trans "Uploaded" %}: {{ paper.upload_date|date:"Y-m-d" }}</small></p>
-                {% if paper.uploader_name %}
-                <p><small>{% trans "Uploader" %}: {{ paper.uploader_name }}</small></p>
-                {% endif %}
-                <div class="mb-4">
-                    <h4>{% trans "Full Description" %}</h4>
-                    <p>{{ paper.description|linebreaks }}</p>
-                </div>
-                <div class="mb-4">
-                    <h4>{% trans "Tags" %}</h4>
-                    {% if all_tags %}
-                    <div class="row">
-                        <div class="col-md-6">
-                            <p><strong>{% trans "Year" %}:</strong>
-                                {% for tag in all_tags %}
-                                    {% if tag.category == 'year' %}{{ tag.name }}{% if not forloop.last and not forloop.first %}, {% endif %}{% endif %}
-                                {% endfor %}
-                            </p>
-                            <p><strong>{% trans "Author" %}:</strong>
-                                {% for tag in all_tags %}
-                                    {% if tag.category == 'author' %}{{ tag.name }}{% if not forloop.last and not forloop.first %}, {% endif %}{% endif %}
-                                {% endfor %}
-                            </p>
-                        </div>
-                        <div class="col-md-6">
-                            <p><strong>{% trans "Field" %}:</strong>
-                                {% for tag in all_tags %}
-                                    {% if tag.category == 'field' %}{{ tag.name }}{% if not forloop.last and not forloop.first %}, {% endif %}{% endif %}
-                                {% endfor %}
-                            </p>
-                            <p><strong>{% trans "Paper Type" %}:</strong>
-                                {% for tag in all_tags %}
-                                    {% if tag.category == 'paper_type' %}{{ tag.name }}{% if not forloop.last and not forloop.first %}, {% endif %}{% endif %}
-                                {% endfor %}
-                            </p>
-                        </div>
+                <div class="card">
+                    <div class="card-body">
+                        <p class="card-text">{{ paper.description }}</p>
+                        <p class="card-text"><small class="text-muted">{% trans "Завантажено" %}: {{ paper.upload_date|date:"Y-m-d" }}</small></p>
+                        <p class="card-text">
+                            <strong>{% trans "Authors" %}:</strong>
+                            {% for tag in all_tags %}
+                            {% if tag.category == 'author' %}
+                            <span class="badge bg-secondary">{{ tag.name }}</span>
+                            {% endif %}
+                            {% empty %}
+                            {% trans "No authors" %}
+                            {% endfor %}
+                        </p>
+                        <p class="card-text">
+                            <strong>{% trans "Fields" %}:</strong>
+                            {% for tag in all_tags %}
+                            {% if tag.category == 'field' %}
+                            <span class="badge bg-secondary">{{ tag.name }}</span>
+                            {% endif %}
+                            {% empty %}
+                            {% trans "No fields" %}
+                            {% endfor %}
+                        </p>
+                        <p class="card-text">
+                            <strong>{% trans "Paper Types" %}:</strong>
+                            {% for tag in all_tags %}
+                            {% if tag.category == 'paper_type' %}
+                            <span class="badge bg-secondary">{{ tag.name }}</span>
+                            {% endif %}
+                            {% empty %}
+                            {% trans "No paper types" %}
+                            {% endfor %}
+                        </p>
+                        <p class="card-text">
+                            <strong>{% trans "Years" %}:</strong>
+                            {% for tag in all_tags %}
+                            {% if tag.category == 'year' %}
+                            <span class="badge bg-secondary">{{ tag.name }}</span>
+                            {% endif %}
+                            {% empty %}
+                            {% trans "No years" %}
+                            {% endfor %}
+                        </p>
+                        <a href="{{ paper.file.url }}" class="btn btn-primary download-btn" download>{% trans "Завантажити" %}</a>
                     </div>
-                    {% else %}
-                    <p>{% trans "No tags associated with this paper" %}</p>
-                    {% endif %}
                 </div>
-                <a href="{{ paper.file.url }}" class="btn btn-primary" target="_blank">{% trans "Завантажити" %}</a>
-                <a href="{% url 'search_results' %}" class="btn btn-secondary ms-2">{% trans "Back to Search" %}</a>
             </div>
             <div class="col-lg-3">
                 <div class="sidebar">
                     <h5>{% trans "Навігація" %}</h5>
-                    <ul class="list-group">
-                        <li class="list-group-item">
-                            <a href="{% url 'tag_list' 'author' %}">{% trans "All Authors" %}</a>
-                        </li>
-                        <li class="list-group-item">
-                            <a href="{% url 'tag_list' 'year' %}">{% trans "All Years" %}</a>
-                        </li>
-                        <li class="list-group-item">
-                            <a href="{% url 'tag_list' 'field' %}">{% trans "All Fields" %}</a>
-                        </li>
-                        <li class="list-group-item">
-                            <a href="{% url 'tag_list' 'paper_type' %}">{% trans "All Paper Types" %}</a>
-                        </li>
-                        <li class="list-group-item">
-                            <a href="{% url 'upload_paper' %}">{% trans "Завантажити статтю" %}</a>
-                        </li>
-                        {% if user.is_superuser %}
-                        <li class="list-group-item">
-                            <a href="{% url 'moderate_papers' %}">{% trans "Moderate Papers" %}</a>
-                        </li>
-                        {% endif %}
-                    </ul>
+                    <div class="nav-section">
+                        <h6>{% trans "All Authors" %}</h6>
+                        <div class="list-group">
+                            {% for tag in top_tags.author %}
+                            <a href="{% url 'search_results' %}?tags_author={{ tag.id }}" class="list-group-item list-group-item-action tag-box">
+                                {{ tag.name }} <span class="counter-box">{{ tag.num_papers|default:"0" }}</span>
+                            </a>
+                            {% empty %}
+                            <div class="list-group-item">{% trans "No authors" %}</div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <div class="nav-section">
+                        <h6>{% trans "All Years" %}</h6>
+                        <div class="list-group">
+                            {% for tag in top_tags.year %}
+                            <a href="{% url 'search_results' %}?tags_year={{ tag.id }}" class="list-group-item list-group-item-action tag-box">
+                                {{ tag.name }} <span class="counter-box">{{ tag.num_papers|default:"0" }}</span>
+                            </a>
+                            {% empty %}
+                            <div class="list-group-item">{% trans "No years" %}</div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <div class="nav-section">
+                        <h6>{% trans "All Fields" %}</h6>
+                        <div class="list-group">
+                            {% for tag in top_tags.field %}
+                            <a href="{% url 'search_results' %}?tags_field={{ tag.id }}" class="list-group-item list-group-item-action tag-box">
+                                {{ tag.name }} <span class="counter-box">{{ tag.num_papers|default:"0" }}</span>
+                            </a>
+                            {% empty %}
+                            <div class="list-group-item">{% trans "No fields" %}</div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <div class="nav-section">
+                        <h6>{% trans "All Paper Types" %}</h6>
+                        <div class="list-group">
+                            {% for tag in top_tags.paper_type %}
+                            <a href="{% url 'search_results' %}?tags_paper_type={{ tag.id }}" class="list-group-item list-group-item-action tag-box">
+                                {{ tag.name }} <span class="counter-box">{{ tag.num_papers|default:"0" }}</span>
+                            </a>
+                            {% empty %}
+                            <div class="list-group-item">{% trans "No paper types" %}</div>
+                            {% endfor %}
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $('.tag-select').each(function() {
+                $(this).select2({
+                    placeholder: "{% trans 'Select tags' %}",
+                    allowClear: true,
+                });
+            });
+        });
+    </script>
 </body>
 </html>

@@ -2,7 +2,7 @@
 .tag-box {
     background-color: #f0f0f0; /* Light gray */
     border-radius: 8px; /* Rounded corners */
-    text-decoration: none; /* Remove underline from link */
+    text-decoration: none !important; /* Remove underline from link */
     color: #333; /* Dark text color */
     transition: background-color 0.2s; /* Smooth hover effect */
 }
@@ -10,6 +10,7 @@
 .tag-box:hover {
     background-color: #e0e0e0; /* Slightly darker gray on hover */
     color: #333;
+    text-decoration: none !important; /* Ensure no underline on hover */
 }
 
 .counter-box {
@@ -38,13 +39,32 @@
 
 /* Styles for clickable cards on the search results page */
 .clickable-card {
-    transition: background-color 0.2s, transform 0.1s;
+    transition: background-color 0.2s;
+    min-height: 150px; /* Ensure enough space for content and button */
+    padding: 15px 15px 50px 15px; /* Add padding to avoid overlap with button and ensure consistency */
+    border: 1px solid #dee2e6 !important; /* Ensure full border */
+    border-radius: 4px; /* Match Bootstrap's list-group-item border-radius */
 }
 
 .clickable-card:hover {
     background-color: #f8f9fa; /* Light gray on hover */
-    transform: scale(1.01); /* Slight zoom effect */
     cursor: pointer;
+}
+
+/* Override Bootstrap's list-group-item border behavior for all list-group-items */
+.list-group-item {
+    border: 1px solid #dee2e6 !important; /* Ensure each card has its own full border */
+    border-radius: 4px !important; /* Ensure consistent border radius */
+}
+
+/* Ensure list-group spacing */
+.list-group-item + .list-group-item {
+    margin-top: 1rem; /* Add spacing between items to prevent overlap */
+}
+
+/* Ensure no underline for list-group-item-action in tag boxes */
+.list-group-item-action.tag-box {
+    text-decoration: none !important;
 }
 
 /* Styles for the right-hand sidebar */

@@ -3,18 +3,22 @@ from django.urls import reverse
 from django.db.models import Count, Q
 from django.http import HttpResponse
 from django.contrib.auth import authenticate, login, logout
-from django.contrib.auth.decorators import login_required, user_passes_test
+from django.contrib.auth.decorators import user_passes_test
 from .models import Paper, Tag
 from django.utils import timezone
 import datetime
+import logging
+
+# Set up logging
+logger = logging.getLogger(__name__)
 
 def home(request):
     query = request.GET.get('q', '')
     top_tags = {
-        'author': Tag.objects.filter(category='author', status='approved').annotate(num_papers=Count('papers', filter=Q(papers__status='approved')))[:5],
-        'year': Tag.objects.filter(category='year', status='approved').annotate(num_papers=Count('papers', filter=Q(papers__status='approved')))[:5],
-        'field': Tag.objects.filter(category='field', status='approved').annotate(num_papers=Count('papers', filter=Q(papers__status='approved')))[:5],
-        'paper_type': Tag.objects.filter(category='paper_type', status='approved').annotate(num_papers=Count('papers', filter=Q(papers__status='approved')))[:5],
+        'author': Tag.objects.filter(category='author', status='approved').annotate(num_papers=Count('papers', filter=Q(papers__status='approved'))).order_by('-num_papers')[:5],
+        'year': Tag.objects.filter(category='year', status='approved').annotate(num_papers=Count('papers', filter=Q(papers__status='approved'))).order_by('-num_papers')[:5],
+        'field': Tag.objects.filter(category='field', status='approved').annotate(num_papers=Count('papers', filter=Q(papers__status='approved'))).order_by('-num_papers')[:5],
+        'paper_type': Tag.objects.filter(category='paper_type', status='approved').annotate(num_papers=Count('papers', filter=Q(papers__status='approved'))).order_by('-num_papers')[:5],
     }
     return render(request, 'papers/home.html', {'top_tags': top_tags, 'query': query})
 
@@ -28,10 +32,10 @@ def search_results(request):
 
     papers = Paper.objects.filter(status='approved')
     tags = {
-        'author': Tag.objects.filter(category='author', status='approved'),
-        'field': Tag.objects.filter(category='field', status='approved'),
-        'paper_type': Tag.objects.filter(category='paper_type', status='approved'),
-        'year': Tag.objects.filter(category='year', status='approved'),
+        'author': Tag.objects.filter(category='author', status='approved').annotate(num_papers=Count('papers', filter=Q(papers__status='approved'))).order_by('-num_papers')[:5],
+        'field': Tag.objects.filter(category='field', status='approved').annotate(num_papers=Count('papers', filter=Q(papers__status='approved'))).order_by('-num_papers')[:5],
+        'paper_type': Tag.objects.filter(category='paper_type', status='approved').annotate(num_papers=Count('papers', filter=Q(papers__status='approved'))).order_by('-num_papers')[:5],
+        'year': Tag.objects.filter(category='year', status='approved').annotate(num_papers=Count('papers', filter=Q(papers__status='approved'))).order_by('-num_papers')[:5],
     }
 
     if query:
@@ -62,8 +66,14 @@ def search_results(request):
 
 def paper_detail(request, paper_id):
     paper = get_object_or_404(Paper, id=paper_id)
-    all_tags = paper.tags.all()  # Get all tags associated with the paper
-    return render(request, 'papers/paper_detail.html', {'paper': paper, 'all_tags': all_tags})
+    all_tags = paper.tags.all()
+    top_tags = {
+        'author': Tag.objects.filter(category='author', status='approved').annotate(num_papers=Count('papers', filter=Q(papers__status='approved'))).order_by('-num_papers')[:5],
+        'field': Tag.objects.filter(category='field', status='approved').annotate(num_papers=Count('papers', filter=Q(papers__status='approved'))).order_by('-num_papers')[:5],
+        'paper_type': Tag.objects.filter(category='paper_type', status='approved').annotate(num_papers=Count('papers', filter=Q(papers__status='approved'))).order_by('-num_papers')[:5],
+        'year': Tag.objects.filter(category='year', status='approved').annotate(num_papers=Count('papers', filter=Q(papers__status='approved'))).order_by('-num_papers')[:5],
+    }
+    return render(request, 'papers/paper_detail.html', {'paper': paper, 'all_tags': all_tags, 'top_tags': top_tags})
 
 def upload_paper(request):
     tags = {
@@ -75,58 +85,68 @@ def upload_paper(request):
     error = None
 
     if request.method == 'POST':
-        title = request.POST.get('title')
-        description = request.POST.get('description', '')
-        file = request.FILES.get('file')
-        uploader_name = request.POST.get('uploader_name') if not request.user.is_authenticated else None
+        try:
+            title = request.POST.get('title')
+            description = request.POST.get('description', '')
+            file = request.FILES.get('file')
+            uploader_name = request.POST.get('uploader_name') if not request.user.is_authenticated else None
 
-        # Handle tags for each category
-        new_tags = []
-        selected_tags = []
-        for category in ['author', 'year', 'field', 'paper_type']:
-            tag_inputs = request.POST.getlist(f'tags_{category}')
-            for tag_input in tag_inputs:
+            # Validate required fields
+            if not (title and file):
+                error = "Title and file are required"
+                logger.error("Missing required fields: title or file")
+                return render(request, 'papers/upload.html', {'tags': tags, 'error': error})
+
+            new_tags = []
+            selected_tags = []
+            for category in ['author', 'year', 'field', 'paper_type']:
+                tag_input = request.POST.get(f'tags_{category}', '')  # Get the comma-separated string
                 if tag_input:
-                    # Check if tag exists
-                    existing_tag = Tag.objects.filter(category=category, name=tag_input, status='approved').first()
-                    if existing_tag:
-                        selected_tags.append(existing_tag.id)
-                    else:
-                        # Create a new tag with pending status
-                        new_tag = Tag.objects.create(category=category, name=tag_input, status='pending')
-                        new_tags.append(new_tag)
-                        selected_tags.append(new_tag.id)
+                    tag_inputs = tag_input.split(',')  # Split into list
+                    for tag_input in tag_inputs:
+                        tag_input = tag_input.strip()
+                        if tag_input:  # Ignore empty values
+                            existing_tag = Tag.objects.filter(category=category, name=tag_input, status='approved').first()
+                            if existing_tag:
+                                selected_tags.append(existing_tag.id)
+                                logger.info(f"Existing tag found: {existing_tag}")
+                            else:
+                                new_tag = Tag.objects.create(category=category, name=tag_input, status='pending')
+                                new_tags.append(new_tag)
+                                selected_tags.append(new_tag.id)
+                                logger.info(f"New tag created: {new_tag}")
 
-        if not (title and file):
-            error = "Title and file are required"
-        else:
-            try:
-                # No creation_year validation since it's optional
-                pass
-            except (ValueError, TypeError):
-                error = "Invalid input"
-
-        if not error:
+            # Create the paper
             paper = Paper(
                 title=title,
                 description=description,
                 file=file,
                 upload_date=timezone.now(),
                 view_count=0,
-                status='pending',
+                status='pending',  # Match model's status
                 uploader_name=uploader_name
             )
             paper.save()
+            logger.info(f"Paper created: {paper.id} - {paper.title}")
+
+            # Associate tags
             if selected_tags:
                 paper.tags.set(selected_tags)
+                logger.info(f"Tags set for paper {paper.id}: {selected_tags}")
+
             return redirect('home')
+
+        except Exception as e:
+            error = f"Error uploading paper: {str(e)}"
+            logger.error(f"Error creating paper: {str(e)}")
+            return render(request, 'papers/upload.html', {'tags': tags, 'error': error})
 
     return render(request, 'papers/upload.html', {'tags': tags, 'error': error})
 
 @user_passes_test(lambda u: u.is_superuser)
 def moderate_papers(request):
     pending_papers = Paper.objects.filter(status='pending')
-    # Prepare a list of papers with their pending tags
+    logger.info(f"Moderation query returned {pending_papers.count()} papers")
     papers_with_pending_tags = []
     for paper in pending_papers:
         pending_tags = paper.tags.filter(status='pending')
@@ -134,6 +154,7 @@ def moderate_papers(request):
             'paper': paper,
             'pending_tags': pending_tags
         })
+    logger.info(f"Processed {len(papers_with_pending_tags)} papers with pending tags")
     return render(request, 'papers/moderate_papers.html', {'papers_with_pending_tags': papers_with_pending_tags})
 
 @user_passes_test(lambda u: u.is_superuser)
@@ -141,7 +162,6 @@ def approve_paper(request, paper_id):
     paper = get_object_or_404(Paper, id=paper_id)
     paper.status = 'approved'
     paper.save()
-    # Approve associated pending tags
     pending_tags = paper.tags.filter(status='pending')
     for tag in pending_tags:
         tag.status = 'approved'
@@ -153,7 +173,6 @@ def reject_paper(request, paper_id):
     paper = get_object_or_404(Paper, id=paper_id)
     paper.status = 'rejected'
     paper.save()
-    # Reject associated pending tags
     pending_tags = paper.tags.filter(status='pending')
     for tag in pending_tags:
         tag.status = 'rejected'
@@ -182,7 +201,13 @@ def user_logout(request):
 
 def tag_list(request, category):
     tags = Tag.objects.filter(category=category, status='approved').annotate(num_papers=Count('papers', filter=Q(papers__status='approved')))
-    return render(request, 'papers/tag_list.html', {'tags': tags, 'category': category})
+    top_tags = {
+        'author': Tag.objects.filter(category='author', status='approved').annotate(num_papers=Count('papers', filter=Q(papers__status='approved'))).order_by('-num_papers')[:5],
+        'field': Tag.objects.filter(category='field', status='approved').annotate(num_papers=Count('papers', filter=Q(papers__status='approved'))).order_by('-num_papers')[:5],
+        'paper_type': Tag.objects.filter(category='paper_type', status='approved').annotate(num_papers=Count('papers', filter=Q(papers__status='approved'))).order_by('-num_papers')[:5],
+        'year': Tag.objects.filter(category='year', status='approved').annotate(num_papers=Count('papers', filter=Q(papers__status='approved'))).order_by('-num_papers')[:5],
+    }
+    return render(request, 'papers/tag_list.html', {'tags': tags, 'category': category, 'top_tags': top_tags})
 
 def get_current_language(request):
     from django.utils.translation import get_language

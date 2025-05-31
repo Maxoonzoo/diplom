@@ -9,79 +9,157 @@ msgstr ""
 msgid "Scientific Papers Repository"
 msgstr "Репозиторій наукових статей"
 
+msgid "Репозиторій наукових статей"
+msgstr "Репозиторій наукових статей"
+
 msgid "Scientific Papers"
+msgstr "Наукові статті"
+
+msgid "Наукові статті"
 msgstr "Наукові статті"
 
 msgid "Home"
 msgstr "Головна"
 
+msgid "Головна"
+msgstr "Головна"
+
 msgid "Search"
+msgstr "Пошук"
+
+msgid "Пошук"
 msgstr "Пошук"
 
 msgid "Upload Paper"
 msgstr "Завантажити статтю"
 
+msgid "Завантажити статтю"
+msgstr "Завантажити статтю"
+
 msgid "Admin Panel"
+msgstr "Панель адміністратора"
+
+msgid "Панель адміністратора"
 msgstr "Панель адміністратора"
 
 msgid "Search by title..."
 msgstr "Пошук за назвою..."
 
+msgid "Пошук за назвою..."
+msgstr "Пошук за назвою..."
+
 msgid "Authors"
+msgstr "Автори"
+
+msgid "Автори"
 msgstr "Автори"
 
 msgid "Years"
 msgstr "Роки"
 
+msgid "Роки"
+msgstr "Роки"
+
 msgid "Fields"
+msgstr "Галузі"
+
+msgid "Галузі"
 msgstr "Галузі"
 
 msgid "Paper Types"
 msgstr "Типи статей"
 
+msgid "Типи статей"
+msgstr "Типи статей"
+
 msgid "View All"
+msgstr "Переглянути всі"
+
+msgid "Переглянути всі"
 msgstr "Переглянути всі"
 
 msgid "No tags available"
 msgstr "Теги відсутні"
 
+msgid "Теги відсутні"
+msgstr "Теги відсутні"
+
 msgid "Search Results"
+msgstr "Результати пошуку"
+
+msgid "Результати пошуку"
 msgstr "Результати пошуку"
 
 msgid "Filter by Tags"
 msgstr "Фільтрувати за тегами"
 
+msgid "Фільтрувати за тегами"
+msgstr "Фільтрувати за тегами"
+
 msgid "Sort by"
+msgstr "Сортувати за"
+
+msgid "Сортувати за"
 msgstr "Сортувати за"
 
 msgid "Latest"
 msgstr "Останні"
 
+msgid "Останні"
+msgstr "Останні"
+
 msgid "Most Popular"
+msgstr "Найпопулярніші"
+
+msgid "Найпопулярніші"
 msgstr "Найпопулярніші"
 
 msgid "Uploaded"
 msgstr "Завантажено"
 
+msgid "Завантажено"
+msgstr "Завантажено"
+
 msgid "Views"
+msgstr "Перегляди"
+
+msgid "Перегляди"
 msgstr "Перегляди"
 
 msgid "Download"
 msgstr "Завантажити"
 
+msgid "Завантажити"
+msgstr "Завантажити"
+
 msgid "No papers found"
+msgstr "Статей не знайдено"
+
+msgid "Статей не знайдено"
 msgstr "Статей не знайдено"
 
 msgid "Title"
 msgstr "Назва"
 
+msgid "Назва"
+msgstr "Назва"
+
 msgid "Description"
+msgstr "Опис"
+
+msgid "Опис"
 msgstr "Опис"
 
 msgid "Creation Year"
 msgstr "Рік створення"
 
+msgid "Рік створення"
+msgstr "Рік створення"
+
 msgid "File"
+msgstr "Файл"
+
+msgid "Файл"
 msgstr "Файл"
 
 msgid "Upload"
@@ -90,71 +168,149 @@ msgstr "Завантажити"
 msgid "Invalid year format"
 msgstr "Невірний формат року"
 
+msgid "Невірний формат року"
+msgstr "Невірний формат року"
+
 msgid "Title, year, and file are required"
+msgstr "Назва, рік та файл є обов’язковими"
+
+msgid "Назва, рік та файл є обов’язковими"
 msgstr "Назва, рік та файл є обов’язковими"
 
 msgid "papers"
 msgstr "статей"
 
+msgid "статей"
+msgstr "статей"
+
 msgid "Tag"
+msgstr "Тег"
+
+msgid "Тег"
 msgstr "Тег"
 
 msgid "Paper"
 msgstr "Стаття"
 
+msgid "Стаття"
+msgstr "Стаття"
+
 msgid "Papers"
+msgstr "Статті"
+
+msgid "Статті"
 msgstr "Статті"
 
 msgid "Welcome to the Scientific Papers Repository"
 msgstr "Ласкаво просимо до Репозиторію наукових статей"
 
+msgid "Ласкаво просимо до Репозиторію наукових статей"
+msgstr "Ласкаво просимо до Репозиторію наукових статей"
+
 msgid "View Details"
+msgstr "Переглянути деталі"
+
+msgid "Переглянути деталі"
 msgstr "Переглянути деталі"
 
 msgid "Full Description"
 msgstr "Повний опис"
 
+msgid "Повний опис"
+msgstr "Повний опис"
+
 msgid "Tags"
+msgstr "Теги"
+
+msgid "Теги"
 msgstr "Теги"
 
 msgid "Back to Search"
 msgstr "Повернутися до пошуку"
 
+msgid "Повернутися до пошуку"
+msgstr "Повернутися до пошуку"
+
 msgid "Author"
+msgstr "Автор"
+
+msgid "Автор"
 msgstr "Автор"
 
 msgid "Field"
 msgstr "Галузь"
 
+msgid "Галузь"
+msgstr "Галузь"
+
 msgid "Paper Type"
+msgstr "Тип статті"
+
+msgid "Тип статті"
 msgstr "Тип статті"
 
 msgid "Your Name"
 msgstr "Ваше ім'я"
 
+msgid "Ваше ім'я"
+msgstr "Ваше ім'я"
+
 msgid "Back to Home"
+msgstr "Повернутися на головну"
+
+msgid "Повернутися на головну"
 msgstr "Повернутися на головну"
 
 msgid "Username"
 msgstr "Ім'я користувача"
 
+msgid "Ім'я користувача"
+msgstr "Ім'я користувача"
+
 msgid "No pending papers for moderation"
+msgstr "Немає статей що очікують модерації"
+
+msgid "Немає статей що очікують модерації"
 msgstr "Немає статей що очікують модерації"
 
 msgid "Moderate Papers"
 msgstr "Модерація статей"
 
+msgid "Модерація статей"
+msgstr "Модерація статей"
+
 msgid "Navigation"
 msgstr "Навігація"
 
+msgid "Навігація"
+msgstr "Навігація"
+
 msgid "All Authors"
-msgstr "Автори"
+msgstr "Усі автори"
+
+msgid "Усі автори"
+msgstr "Усі автори"
 
 msgid "All Years"
-msgstr "Роки"
+msgstr "Усі роки"
+
+msgid "Усі роки"
+msgstr "Усі роки"
 
 msgid "All Fields"
-msgstr "Галузі"
+msgstr "Усі галузі"
+
+msgid "Усі галузі"
+msgstr "Усі галузі"
 
 msgid "All Paper Types"
-msgstr "Тема"
+msgstr "Усі типи статей"
+
+msgid "Усі типи статей"
+msgstr "Усі типи статей"
+
+msgid "Year"
+msgstr "Рік"
+
+msgid "Рік"
+msgstr "Рік"

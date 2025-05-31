@@ -121,16 +121,14 @@
 
                     <div class="list-group">
                         {% for paper in papers %}
-                        <a href="{% url 'paper_detail' paper.id %}" class="list-group-item list-group-item-action mb-3 clickable-card" style="display: block;">
-                            <div class="d-flex w-100 justify-content-between align-items-center">
-                                <div>
-                                    <h5 class="mb-1">{{ paper.title }}</h5>
-                                    <p class="mb-1">{{ paper.description|truncatewords:50 }}</p>
-                                    <small class="text-muted">{% trans "Завантажено" %}: {{ paper.upload_date|date:"Y-m-d" }}</small>
-                                </div>
-                                <a href="{{ paper.file.url }}" class="btn btn-primary download-btn ms-3" target="_blank" onclick="event.stopPropagation();">{% trans "Завантажити" %}</a>
-                            </div>
-                        </a>
+                        <div class="list-group-item mb-3 position-relative clickable-card" style="border: 1px solid #dee2e6 !important;">
+                            <a href="{% url 'paper_detail' paper.id %}" class="d-block text-decoration-none text-dark" data-paper-id="{{ paper.id }}">
+                                <h5 class="mb-1">{{ paper.title }}</h5>
+                                <p class="mb-1">{{ paper.description|truncatewords:50 }}</p>
+                                <small class="text-muted">{% trans "Завантажено" %}: {{ paper.upload_date|date:"Y-m-d" }}</small>
+                            </a>
+                            <a href="{{ paper.file.url }}" class="btn btn-primary download-btn position-absolute bottom-0 end-0 m-3" download onclick="event.stopPropagation();">{% trans "Завантажити" %}</a>
+                        </div>
                         {% empty %}
                         <p>{% trans "Статей не знайдено" %}</p>
                         {% endfor %}
@@ -142,79 +140,51 @@
                     <h5>{% trans "Навігація" %}</h5>
                     <div class="nav-section">
                         <h6>{% trans "All Authors" %}</h6>
-                        <ul class="list-group">
-                            {% with tags.author|dictsortreversed:"num_papers" as top_authors %}
-                            {% if top_authors %}
-                            {% for tag in top_authors|slice:":5" %}
-                            {% if tag.num_papers > 0 %}
-                            <li class="list-group-item nav-item-light">{{ tag.name }} ({{ tag.num_papers|default:"0" }})</li>
-                            {% endif %}
+                        <div class="list-group">
+                            {% for tag in tags.author %}
+                            <a href="{% url 'search_results' %}?tags_author={{ tag.id }}" class="list-group-item list-group-item-action tag-box">
+                                {{ tag.name }} <span class="counter-box">{{ tag.num_papers|default:"0" }}</span>
+                            </a>
+                            {% empty %}
+                            <div class="list-group-item">{% trans "No authors" %}</div>
                             {% endfor %}
-                            {% if not top_authors|length or top_authors|length == 0 or top_authors|slice:":5"|length == 0 %}
-                            <li class="list-group-item nav-item-light">{% trans "No authors with papers" %}</li>
-                            {% endif %}
-                            {% else %}
-                            <li class="list-group-item nav-item-light">{% trans "No authors" %}</li>
-                            {% endif %}
-                            {% endwith %}
-                        </ul>
+                        </div>
                     </div>
                     <div class="nav-section">
                         <h6>{% trans "All Years" %}</h6>
-                        <ul class="list-group">
-                            {% with tags.year|dictsortreversed:"num_papers" as top_years %}
-                            {% if top_years %}
-                            {% for tag in top_years|slice:":5" %}
-                            {% if tag.num_papers > 0 %}
-                            <li class="list-group-item nav-item-light">{{ tag.name }} ({{ tag.num_papers|default:"0" }})</li>
-                            {% endif %}
+                        <div class="list-group">
+                            {% for tag in tags.year %}
+                            <a href="{% url 'search_results' %}?tags_year={{ tag.id }}" class="list-group-item list-group-item-action tag-box">
+                                {{ tag.name }} <span class="counter-box">{{ tag.num_papers|default:"0" }}</span>
+                            </a>
+                            {% empty %}
+                            <div class="list-group-item">{% trans "No years" %}</div>
                             {% endfor %}
-                            {% if not top_years|length or top_years|length == 0 or top_years|slice:":5"|length == 0 %}
-                            <li class="list-group-item nav-item-light">{% trans "No years with papers" %}</li>
-                            {% endif %}
-                            {% else %}
-                            <li class="list-group-item nav-item-light">{% trans "No years" %}</li>
-                            {% endif %}
-                            {% endwith %}
-                        </ul>
+                        </div>
                     </div>
                     <div class="nav-section">
                         <h6>{% trans "All Fields" %}</h6>
-                        <ul class="list-group">
-                            {% with tags.field|dictsortreversed:"num_papers" as top_fields %}
-                            {% if top_fields %}
-                            {% for tag in top_fields|slice:":5" %}
-                            {% if tag.num_papers > 0 %}
-                            <li class="list-group-item nav-item-light">{{ tag.name }} ({{ tag.num_papers|default:"0" }})</li>
-                            {% endif %}
+                        <div class="list-group">
+                            {% for tag in tags.field %}
+                            <a href="{% url 'search_results' %}?tags_field={{ tag.id }}" class="list-group-item list-group-item-action tag-box">
+                                {{ tag.name }} <span class="counter-box">{{ tag.num_papers|default:"0" }}</span>
+                            </a>
+                            {% empty %}
+                            <div class="list-group-item">{% trans "No fields" %}</div>
                             {% endfor %}
-                            {% if not top_fields|length or top_fields|length == 0 or top_fields|slice:":5"|length == 0 %}
-                            <li class="list-group-item nav-item-light">{% trans "No fields with papers" %}</li>
-                            {% endif %}
-                            {% else %}
-                            <li class="list-group-item nav-item-light">{% trans "No fields" %}</li>
-                            {% endif %}
-                            {% endwith %}
-                        </ul>
+                        </div>
                     </div>
                     <div class="nav-section">
                         <h6>{% trans "All Paper Types" %}</h6>
-                        <ul class="list-group">
-                            {% with tags.paper_type|dictsortreversed:"num_papers" as top_paper_types %}
-                            {% if top_paper_types %}
-                            {% for tag in top_paper_types|slice:":5" %}
-                            {% if tag.num_papers > 0 %}
-                            <li class="list-group-item nav-item-light">{{ tag.name }} ({{ tag.num_papers|default:"0" }})</li>
-                            {% endif %}
+                        <div class="list-group">
+                            {% for tag in tags.paper_type %}
+                            <a href="{% url 'search_results' %}?tags_paper_type={{ tag.id }}" class="list-group-item list-group-item-action tag-box">
+                                {{ tag.name }} <span class="counter-box">{{ tag.num_papers|default:"0" }}</span>
+                            </a>
+                            {% empty %}
+                            <div class="list-group-item">{% trans "No paper types" %}</div>
                             {% endfor %}
-                            {% if not top_paper_types|length or top_paper_types|length == 0 or top_paper_types|slice:":5"|length == 0 %}
-                            <li class="list-group-item nav-item-light">{% trans "No paper types with papers" %}</li>
-                            {% endif %}
-                            {% else %}
-                            <li class="list-group-item nav-item-light">{% trans "No paper types" %}</li>
-                            {% endif %}
-                            {% endwith %}
-                        </ul>
+                        </div>
                     </div>
                 </div>
             </div>

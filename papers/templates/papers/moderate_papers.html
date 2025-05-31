@@ -68,7 +68,7 @@
     </nav>
     <div class="container mt-4">
         <div class="row">
-            <div class="col-lg-9">
+            <div class="col-12"> <!-- Full width, no sidebar -->
                 <h1 class="mb-4">{% trans "Moderate Papers" %}</h1>
                 {% if papers_with_pending_tags %}
                 <div class="list-group">
@@ -96,33 +96,6 @@
                 {% else %}
                 <p>{% trans "No pending papers for moderation" %}</p>
                 {% endif %}
-            </div>
-            <div class="col-lg-3">
-                <div class="sidebar">
-                    <h5>{% trans "Навігація" %}</h5>
-                    <ul class="list-group">
-                        <li class="list-group-item">
-                            <a href="{% url 'tag_list' 'author' %}">{% trans "All Authors" %}</a>
-                        </li>
-                        <li class="list-group-item">
-                            <a href="{% url 'tag_list' 'year' %}">{% trans "All Years" %}</a>
-                        </li>
-                        <li class="list-group-item">
-                            <a href="{% url 'tag_list' 'field' %}">{% trans "All Fields" %}</a>
-                        </li>
-                        <li class="list-group-item">
-                            <a href="{% url 'tag_list' 'paper_type' %}">{% trans "All Paper Types" %}</a>
-                        </li>
-                        <li class="list-group-item">
-                            <a href="{% url 'upload_paper' %}">{% trans "Завантажити статтю" %}</a>
-                        </li>
-                        {% if user.is_superuser %}
-                        <li class="list-group-item">
-                            <a href="{% url 'moderate_papers' %}">{% trans "Moderate Papers" %}</a>
-                        </li>
-                        {% endif %}
-                    </ul>
-                </div>
             </div>
         </div>
     </div>
