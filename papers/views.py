@@ -97,24 +97,40 @@ def upload_paper(request):
                 logger.error("Missing required fields: title or file")
                 return render(request, 'papers/upload.html', {'tags': tags, 'error': error})
 
+            # Validate that each category has at least one tag
+            categories = ['author', 'year', 'field', 'paper_type']
+            selected_tags_by_category = {}
+            missing_categories = []
+
+            for category in categories:
+                tag_input = request.POST.get(f'tags_{category}', '').strip()
+                if tag_input:
+                    tag_inputs = [tag.strip() for tag in tag_input.split(',') if tag.strip()]
+                    selected_tags_by_category[category] = tag_inputs
+                    if not tag_inputs:  # If no tags after splitting
+                        missing_categories.append(category)
+                else:
+                    missing_categories.append(category)
+
+            if missing_categories:
+                error = f"Each category must have at least one tag. Missing tags for: {', '.join(missing_categories)}"
+                logger.error(f"Validation failed: {error}")
+                return render(request, 'papers/upload.html', {'tags': tags, 'error': error})
+
+            # Process tags
             new_tags = []
             selected_tags = []
-            for category in ['author', 'year', 'field', 'paper_type']:
-                tag_input = request.POST.get(f'tags_{category}', '')  # Get the comma-separated string
-                if tag_input:
-                    tag_inputs = tag_input.split(',')  # Split into list
-                    for tag_input in tag_inputs:
-                        tag_input = tag_input.strip()
-                        if tag_input:  # Ignore empty values
-                            existing_tag = Tag.objects.filter(category=category, name=tag_input, status='approved').first()
-                            if existing_tag:
-                                selected_tags.append(existing_tag.id)
-                                logger.info(f"Existing tag found: {existing_tag}")
-                            else:
-                                new_tag = Tag.objects.create(category=category, name=tag_input, status='pending')
-                                new_tags.append(new_tag)
-                                selected_tags.append(new_tag.id)
-                                logger.info(f"New tag created: {new_tag}")
+            for category in categories:
+                for tag_input in selected_tags_by_category[category]:
+                    existing_tag = Tag.objects.filter(category=category, name=tag_input, status='approved').first()
+                    if existing_tag:
+                        selected_tags.append(existing_tag.id)
+                        logger.info(f"Existing tag found: {existing_tag}")
+                    else:
+                        new_tag = Tag.objects.create(category=category, name=tag_input, status='pending')
+                        new_tags.append(new_tag)
+                        selected_tags.append(new_tag.id)
+                        logger.info(f"New tag created: {new_tag}")
 
             # Create the paper
             paper = Paper(
@@ -123,7 +139,7 @@ def upload_paper(request):
                 file=file,
                 upload_date=timezone.now(),
                 view_count=0,
-                status='pending',  # Match model's status
+                status='pending',
                 uploader_name=uploader_name
             )
             paper.save()

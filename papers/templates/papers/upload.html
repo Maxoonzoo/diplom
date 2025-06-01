@@ -121,7 +121,7 @@
         <div class="row">
             <div class="col-lg-12">
                 <h1 class="mb-4">{% trans "Завантажити статтю" %}</h1>
-                <form method="post" enctype="multipart/form-data">
+                <form method="post" enctype="multipart/form-data" id="uploadForm">
                     {% csrf_token %}
                     <div class="mb-3">
                         <label for="title" class="form-label">{% trans "Title" %}</label>
@@ -149,6 +149,7 @@
                             {% elif category == 'field' %}{% trans "Fields" %}
                             {% elif category == 'paper_type' %}{% trans "Paper Types" %}
                             {% endif %}
+                            <span class="text-danger">*</span>
                         </label>
                         <div class="tag-input" id="tag-input_{{ category }}">
                             <input type="text" class="tag-input-field" id="tags_{{ category }}" name="tags_{{ category }}" data-tags='{{ tag_list|join:"," }}' placeholder="{% trans 'Add new tag...' %}">
@@ -244,6 +245,23 @@
                         $input.trigger('input');
                     }
                 });
+            });
+
+            // Client-side validation for tags
+            $('#uploadForm').on('submit', function(e) {
+                var missingCategories = [];
+                ['author', 'year', 'field', 'paper_type'].forEach(function(category) {
+                    var hiddenInput = $('#hidden_tags_' + category);
+                    var tags = hiddenInput.val().split(',').filter(tag => tag.trim() !== '');
+                    if (tags.length === 0) {
+                        missingCategories.push(category.charAt(0).toUpperCase() + category.slice(1));
+                    }
+                });
+
+                if (missingCategories.length > 0) {
+                    e.preventDefault();
+                    alert('Each category must have at least one tag. Missing tags for: ' + missingCategories.join(', '));
+                }
             });
         });
     </script>
