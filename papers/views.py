@@ -9,20 +9,34 @@ from django.utils import timezone
 import datetime
 import logging
 
-# Set up logging
+# Налаштування логування
 logger = logging.getLogger(__name__)
 
 def home(request):
+    # Відображає головну сторінку з топ-тегами та пошуковим запитом
     query = request.GET.get('q', '')
     top_tags = {
-        'author': Tag.objects.filter(category='author', status='approved').annotate(num_papers=Count('papers', filter=Q(papers__status='approved'))).order_by('-num_papers')[:5],
-        'year': Tag.objects.filter(category='year', status='approved').annotate(num_papers=Count('papers', filter=Q(papers__status='approved'))).order_by('-num_papers')[:5],
-        'field': Tag.objects.filter(category='field', status='approved').annotate(num_papers=Count('papers', filter=Q(papers__status='approved'))).order_by('-num_papers')[:5],
-        'paper_type': Tag.objects.filter(category='paper_type', status='approved').annotate(num_papers=Count('papers', filter=Q(papers__status='approved'))).order_by('-num_papers')[:5],
+        'author': Tag.objects.filter(category='author', status='approved')
+                            .annotate(num_papers=Count('papers', filter=Q(papers__status='approved')))
+                            .filter(num_papers__gt=0)
+                            .order_by('-num_papers')[:5],
+        'year': Tag.objects.filter(category='year', status='approved')
+                          .annotate(num_papers=Count('papers', filter=Q(papers__status='approved')))
+                          .filter(num_papers__gt=0)
+                          .order_by('-num_papers')[:5],
+        'field': Tag.objects.filter(category='field', status='approved')
+                           .annotate(num_papers=Count('papers', filter=Q(papers__status='approved')))
+                           .filter(num_papers__gt=0)
+                           .order_by('-num_papers')[:5],
+        'paper_type': Tag.objects.filter(category='paper_type', status='approved')
+                                .annotate(num_papers=Count('papers', filter=Q(papers__status='approved')))
+                                .filter(num_papers__gt=0)
+                                .order_by('-num_papers')[:5],
     }
     return render(request, 'papers/home.html', {'top_tags': top_tags, 'query': query})
 
 def search_results(request):
+    # Обробляє пошук статей за запитом та фільтрами, сортує результати
     query = request.GET.get('q', '')
     selected_author_tags = request.GET.getlist('tags_author')
     selected_field_tags = request.GET.getlist('tags_field')
@@ -32,10 +46,22 @@ def search_results(request):
 
     papers = Paper.objects.filter(status='approved')
     tags = {
-        'author': Tag.objects.filter(category='author', status='approved').annotate(num_papers=Count('papers', filter=Q(papers__status='approved'))).order_by('-num_papers')[:5],
-        'field': Tag.objects.filter(category='field', status='approved').annotate(num_papers=Count('papers', filter=Q(papers__status='approved'))).order_by('-num_papers')[:5],
-        'paper_type': Tag.objects.filter(category='paper_type', status='approved').annotate(num_papers=Count('papers', filter=Q(papers__status='approved'))).order_by('-num_papers')[:5],
-        'year': Tag.objects.filter(category='year', status='approved').annotate(num_papers=Count('papers', filter=Q(papers__status='approved'))).order_by('-num_papers')[:5],
+        'author': Tag.objects.filter(category='author', status='approved')
+                            .annotate(num_papers=Count('papers', filter=Q(papers__status='approved')))
+                            .filter(num_papers__gt=0)
+                            .order_by('-num_papers')[:5],
+        'field': Tag.objects.filter(category='field', status='approved')
+                           .annotate(num_papers=Count('papers', filter=Q(papers__status='approved')))
+                           .filter(num_papers__gt=0)
+                           .order_by('-num_papers')[:5],
+        'paper_type': Tag.objects.filter(category='paper_type', status='approved')
+                                .annotate(num_papers=Count('papers', filter=Q(papers__status='approved')))
+                                .filter(num_papers__gt=0)
+                                .order_by('-num_papers')[:5],
+        'year': Tag.objects.filter(category='year', status='approved')
+                          .annotate(num_papers=Count('papers', filter=Q(papers__status='approved')))
+                          .filter(num_papers__gt=0)
+                          .order_by('-num_papers')[:5],
     }
 
     if query:
@@ -65,22 +91,48 @@ def search_results(request):
     })
 
 def paper_detail(request, paper_id):
+    # Відображає деталі конкретної статті та дозволяє видаляти для суперкористувача
     paper = get_object_or_404(Paper, id=paper_id)
     all_tags = paper.tags.all()
     top_tags = {
-        'author': Tag.objects.filter(category='author', status='approved').annotate(num_papers=Count('papers', filter=Q(papers__status='approved'))).order_by('-num_papers')[:5],
-        'field': Tag.objects.filter(category='field', status='approved').annotate(num_papers=Count('papers', filter=Q(papers__status='approved'))).order_by('-num_papers')[:5],
-        'paper_type': Tag.objects.filter(category='paper_type', status='approved').annotate(num_papers=Count('papers', filter=Q(papers__status='approved'))).order_by('-num_papers')[:5],
-        'year': Tag.objects.filter(category='year', status='approved').annotate(num_papers=Count('papers', filter=Q(papers__status='approved'))).order_by('-num_papers')[:5],
+        'author': Tag.objects.filter(category='author', status='approved')
+                            .annotate(num_papers=Count('papers', filter=Q(papers__status='approved')))
+                            .filter(num_papers__gt=0)
+                            .order_by('-num_papers')[:5],
+        'field': Tag.objects.filter(category='field', status='approved')
+                           .annotate(num_papers=Count('papers', filter=Q(papers__status='approved')))
+                           .filter(num_papers__gt=0)
+                           .order_by('-num_papers')[:5],
+        'paper_type': Tag.objects.filter(category='paper_type', status='approved')
+                                .annotate(num_papers=Count('papers', filter=Q(papers__status='approved')))
+                                .filter(num_papers__gt=0)
+                                .order_by('-num_papers')[:5],
+        'year': Tag.objects.filter(category='year', status='approved')
+                          .annotate(num_papers=Count('papers', filter=Q(papers__status='approved')))
+                          .filter(num_papers__gt=0)
+                          .order_by('-num_papers')[:5],
     }
-    return render(request, 'papers/paper_detail.html', {'paper': paper, 'all_tags': all_tags, 'top_tags': top_tags})
+    if request.method == 'POST' and request.user.is_superuser:
+        paper.delete()
+        logger.info(f"Paper {paper.id} - {paper.title} deleted by superuser")
+        return redirect('moderate_papers')
+    return render(request, 'papers/paper_detail.html', {'paper': paper, 'all_tags': all_tags, 'top_tags': top_tags, 'is_superuser': request.user.is_superuser})
 
 def upload_paper(request):
+    # Обробляє завантаження нової статті, перевіряє теги та зберігає
     tags = {
-        'author': Tag.objects.filter(category='author', status='approved'),
-        'year': Tag.objects.filter(category='year', status='approved'),
-        'field': Tag.objects.filter(category='field', status='approved'),
-        'paper_type': Tag.objects.filter(category='paper_type', status='approved'),
+        'author': Tag.objects.filter(category='author', status='approved')
+                            .annotate(num_papers=Count('papers', filter=Q(papers__status='approved')))
+                            .filter(num_papers__gt=0),
+        'year': Tag.objects.filter(category='year', status='approved')
+                          .annotate(num_papers=Count('papers', filter=Q(papers__status='approved')))
+                          .filter(num_papers__gt=0),
+        'field': Tag.objects.filter(category='field', status='approved')
+                           .annotate(num_papers=Count('papers', filter=Q(papers__status='approved')))
+                           .filter(num_papers__gt=0),
+        'paper_type': Tag.objects.filter(category='paper_type', status='approved')
+                                .annotate(num_papers=Count('papers', filter=Q(papers__status='approved')))
+                                .filter(num_papers__gt=0),
     }
     error = None
 
@@ -91,23 +143,20 @@ def upload_paper(request):
             file = request.FILES.get('file')
             uploader_name = request.POST.get('uploader_name') if not request.user.is_authenticated else None
 
-            # Validate required fields
             if not (title and file):
                 error = "Title and file are required"
                 logger.error("Missing required fields: title or file")
                 return render(request, 'papers/upload.html', {'tags': tags, 'error': error})
 
-            # Validate that each category has at least one tag
             categories = ['author', 'year', 'field', 'paper_type']
             selected_tags_by_category = {}
             missing_categories = []
 
             for category in categories:
-                tag_input = request.POST.get(f'tags_{category}', '').strip()
+                tag_input = request.POST.getlist(f'tags_{category}')
                 if tag_input:
-                    tag_inputs = [tag.strip() for tag in tag_input.split(',') if tag.strip()]
-                    selected_tags_by_category[category] = tag_inputs
-                    if not tag_inputs:  # If no tags after splitting
+                    selected_tags_by_category[category] = tag_input
+                    if not tag_input:
                         missing_categories.append(category)
                 else:
                     missing_categories.append(category)
@@ -117,7 +166,6 @@ def upload_paper(request):
                 logger.error(f"Validation failed: {error}")
                 return render(request, 'papers/upload.html', {'tags': tags, 'error': error})
 
-            # Process tags
             new_tags = []
             selected_tags = []
             for category in categories:
@@ -132,7 +180,6 @@ def upload_paper(request):
                         selected_tags.append(new_tag.id)
                         logger.info(f"New tag created: {new_tag}")
 
-            # Create the paper
             paper = Paper(
                 title=title,
                 description=description,
@@ -145,7 +192,6 @@ def upload_paper(request):
             paper.save()
             logger.info(f"Paper created: {paper.id} - {paper.title}")
 
-            # Associate tags
             if selected_tags:
                 paper.tags.set(selected_tags)
                 logger.info(f"Tags set for paper {paper.id}: {selected_tags}")
@@ -161,6 +207,7 @@ def upload_paper(request):
 
 @user_passes_test(lambda u: u.is_superuser)
 def moderate_papers(request):
+    # Відображає список статей на модерацію для суперкористувачів
     pending_papers = Paper.objects.filter(status='pending')
     logger.info(f"Moderation query returned {pending_papers.count()} papers")
     papers_with_pending_tags = []
@@ -175,6 +222,7 @@ def moderate_papers(request):
 
 @user_passes_test(lambda u: u.is_superuser)
 def approve_paper(request, paper_id):
+    # Підтверджує статтю та її теги, доступно лише суперкористувачам
     paper = get_object_or_404(Paper, id=paper_id)
     paper.status = 'approved'
     paper.save()
@@ -186,6 +234,7 @@ def approve_paper(request, paper_id):
 
 @user_passes_test(lambda u: u.is_superuser)
 def reject_paper(request, paper_id):
+    # Відхиляє статтю та її теги, доступно лише суперкористувачам
     paper = get_object_or_404(Paper, id=paper_id)
     paper.status = 'rejected'
     paper.save()
@@ -196,6 +245,7 @@ def reject_paper(request, paper_id):
     return redirect('moderate_papers')
 
 def user_login(request):
+    # Обробляє вхід користувача, перенаправляє залежно від статусу
     if request.method == 'POST':
         username = request.POST.get('username')
         password = request.POST.get('password')
@@ -212,19 +262,34 @@ def user_login(request):
     return render(request, 'papers/login.html')
 
 def user_logout(request):
+    # Виконує вихід користувача та перенаправляє на головну
     logout(request)
     return redirect('home')
 
 def tag_list(request, category):
-    tags = Tag.objects.filter(category=category, status='approved').annotate(num_papers=Count('papers', filter=Q(papers__status='approved')))
+    # Відображає список тегів у вибраній категорії
+    tags = Tag.objects.filter(category=category, status='approved').annotate(num_papers=Count('papers', filter=Q(papers__status='approved'))).filter(num_papers__gt=0)
     top_tags = {
-        'author': Tag.objects.filter(category='author', status='approved').annotate(num_papers=Count('papers', filter=Q(papers__status='approved'))).order_by('-num_papers')[:5],
-        'field': Tag.objects.filter(category='field', status='approved').annotate(num_papers=Count('papers', filter=Q(papers__status='approved'))).order_by('-num_papers')[:5],
-        'paper_type': Tag.objects.filter(category='paper_type', status='approved').annotate(num_papers=Count('papers', filter=Q(papers__status='approved'))).order_by('-num_papers')[:5],
-        'year': Tag.objects.filter(category='year', status='approved').annotate(num_papers=Count('papers', filter=Q(papers__status='approved'))).order_by('-num_papers')[:5],
+        'author': Tag.objects.filter(category='author', status='approved')
+                            .annotate(num_papers=Count('papers', filter=Q(papers__status='approved')))
+                            .filter(num_papers__gt=0)
+                            .order_by('-num_papers')[:5],
+        'field': Tag.objects.filter(category='field', status='approved')
+                           .annotate(num_papers=Count('papers', filter=Q(papers__status='approved')))
+                           .filter(num_papers__gt=0)
+                           .order_by('-num_papers')[:5],
+        'paper_type': Tag.objects.filter(category='paper_type', status='approved')
+                                .annotate(num_papers=Count('papers', filter=Q(papers__status='approved')))
+                                .filter(num_papers__gt=0)
+                                .order_by('-num_papers')[:5],
+        'year': Tag.objects.filter(category='year', status='approved')
+                          .annotate(num_papers=Count('papers', filter=Q(papers__status='approved')))
+                          .filter(num_papers__gt=0)
+                          .order_by('-num_papers')[:5],
     }
     return render(request, 'papers/tag_list.html', {'tags': tags, 'category': category, 'top_tags': top_tags})
 
 def get_current_language(request):
+    # Повертає поточну мову у відповідь
     from django.utils.translation import get_language
     return HttpResponse(f"Current language: {get_language()}")

@@ -116,6 +116,12 @@
                             {% endfor %}
                         </p>
                         <a href="{{ paper.file.url }}" class="btn btn-primary download-btn" download>{% trans "Завантажити" %}</a>
+                        {% if is_superuser %}
+                        <form method="post" action="" class="mt-3">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-danger">{% trans "Видалити статтю" %}</button>
+                        </form>
+                        {% endif %}
                     </div>
                 </div>
             </div>
